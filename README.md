@@ -54,3 +54,12 @@ embutido do PHP apenas em `127.0.0.1`, abre uma janela do Edge em modo aplicativ
 | `licencas/` | licenças dos componentes de terceiros |
 
 Notas de projeto e decisões: [app/BRIEFING.md](app/BRIEFING.md).
+
+## Licença
+
+[PolyForm Noncommercial 1.0.0](LICENSE.md): você pode usar, estudar, modificar e compartilhar este projeto **apenas para
+fins não comerciais**, mantendo a licença e o aviso de autoria. Não é permitido vender nem usar em atividade comercial
+sem autorização do autor.
+
+Os componentes de terceiros (Alpine.js, Chart.js, Tailwind CSS, fontes e PHP) continuam com as próprias licenças, em
+[licencas/](licencas/LEIA.md). Nomes de jogos e capas citados pertencem aos respectivos donos.
