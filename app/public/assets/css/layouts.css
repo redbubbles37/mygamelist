@@ -1,0 +1,164 @@
+/* ===== Visuais do catálogo (independentes do tema; usam as variáveis de cor do tema) ===== */
+
+/* ---------- marca de seleção (edição em massa) ---------- */
+.sel-mark {
+    position: absolute; z-index: 25; left: 50%; bottom: 4.2rem; transform: translateX(-50%);
+    display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 9999px;
+    font-weight: 900; font-size: 1.1rem; line-height: 1; color: transparent;
+    background: rgb(0 0 0 / .6); box-shadow: 0 0 0 2px rgb(255 255 255 / .7), 0 4px 10px rgb(0 0 0 / .4);
+    pointer-events: none;
+}
+.sel-mark.on { background: rgb(var(--brand-600)); color: rgb(var(--on-brand)); }
+.sel-ring { box-shadow: 0 0 0 3px rgb(var(--brand-400)); }
+
+/* ---------- Estante 3D (capas grandes; pouco ângulo para a arte ficar inteira) ---------- */
+.shelf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr)); gap: 1.25rem .75rem; perspective: 1400px; padding: .5rem 0; }
+.shelf-cell { min-width: 0; }
+.shelf-stage { position: relative; display: flex; justify-content: center; align-items: flex-end; padding: 1.4rem .5rem 0; background: linear-gradient(rgb(var(--s-900) / .5), transparent 90%); border-radius: .75rem .75rem 0 0; }
+.shelf-stage::after { /* a tábua da prateleira */
+    content: ''; position: absolute; left: -.25rem; right: -.25rem; bottom: -.9rem; height: .9rem;
+    background: linear-gradient(rgb(var(--s-600)), rgb(var(--s-800))); box-shadow: 0 .5rem .9rem rgb(0 0 0 / .4), inset 0 1px 0 rgb(var(--s-50) / .22);
+}
+.shelf-box {
+    --d: 14px; position: relative; width: 10.5rem; aspect-ratio: 16 / 25; transform-style: preserve-3d;
+    transform: rotateY(14deg) translateX(.4rem); transition: transform .3s ease; margin-bottom: .3rem;
+}
+.shelf-front { position: absolute; inset: 0; overflow: hidden; border-radius: 2px 4px 4px 2px; background: rgb(var(--s-900)); box-shadow: 0 0 0 1px rgb(0 0 0 / .5), 0 .6rem 1rem rgb(0 0 0 / .35); }
+.shelf-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.shelf-front::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, rgb(255 255 255 / .16), transparent 35%, transparent 75%, rgb(0 0 0 / .12)); pointer-events: none; }
+.shelf-side { position: absolute; top: 0; left: 0; width: var(--d); height: 100%; transform-origin: left center; transform: rotateY(90deg); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.shelf-side span { writing-mode: vertical-rl; transform: rotate(180deg); font-size: .55rem; font-weight: 800; letter-spacing: .08em; color: rgb(255 255 255 / .9); white-space: nowrap; text-transform: uppercase; }
+.shelf-link:hover .shelf-box, .shelf-link:focus-visible .shelf-box { transform: rotateY(0deg) translateZ(18px) translateY(-6px) scale(1.04); }
+.shelf-link:focus-visible .shelf-stage { box-shadow: 0 0 0 2px rgb(var(--brand-400)); }
+.shelf-info { margin-top: 1.3rem; text-align: center; padding: 0 .25rem; }
+.shelf-title { font-weight: 700; font-size: .92rem; line-height: 1.25; color: rgb(var(--s-50)); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.shelf-sub { margin-top: .15rem; font-size: .75rem; color: rgb(var(--s-400)); }
+@media (prefers-reduced-motion: reduce) {
+    .shelf-box { transition: none; }
+    .shelf-link:hover .shelf-box, .shelf-link:focus-visible .shelf-box { transform: rotateY(0deg); }
+}
+
+/* ---------- Terminal ---------- */
+.term { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background: rgb(var(--s-950)); border: 1px solid rgb(var(--s-50) / .15); border-radius: .5rem; overflow-x: auto; }
+.term-row { display: grid; grid-template-columns: 3ch minmax(12ch, 1fr) 14ch 11ch 8ch 4ch; gap: 0 1.5ch; padding: .3rem 1rem; font-size: .8rem; color: rgb(var(--s-200)); white-space: nowrap; min-width: 58ch; }
+.term-row > span { overflow: hidden; text-overflow: ellipsis; }
+.term-head { color: rgb(var(--s-500)); border-bottom: 1px dashed rgb(var(--s-50) / .2); padding-top: .6rem; padding-bottom: .5rem; }
+.term-head > span { text-transform: uppercase; font-size: .7rem; letter-spacing: .08em; }
+a.term-row:hover, a.term-row:focus-visible { background: rgb(var(--brand-500) / .14); color: rgb(var(--s-50)); outline: none; }
+a.term-row:hover .term-title::before, a.term-row:focus-visible .term-title::before { content: '> '; color: rgb(var(--brand-400)); }
+.term-title { color: rgb(var(--brand-400)); }
+.term-prompt { padding: .6rem 1rem; font-size: .75rem; color: rgb(var(--s-500)); border-top: 1px dashed rgb(var(--s-50) / .2); }
+.term-prompt::after { content: '█'; margin-left: .4ch; animation: blink 1.1s steps(2, start) infinite; color: rgb(var(--brand-400)); }
+@keyframes blink { to { visibility: hidden; } }
+
+/* ---------- Seletor de visual ---------- */
+.layout-prev { position: relative; height: 5.5rem; overflow: hidden; border-radius: .6rem; background: rgb(var(--s-950)); border: 1px solid rgb(var(--s-50) / .1); }
+
+@media (prefers-reduced-motion: reduce) {
+    .term-prompt::after { animation: none; }
+}
+
+/* ---------- Modo calmo: some tudo que é XP, nível, metas, ranking e números ---------- */
+[data-calm] .xp-ui { display: none !important; }
+
+/* ---------- Livro da vida gamer: sempre "papel", independente do tema ---------- */
+.book { color: #1c1917; font-family: Georgia, "Times New Roman", serif; }
+.book-page { background: #fffdf8; border: 1px solid #e7e0d2; border-radius: 4px; padding: 2.5rem 2.75rem; margin-bottom: 1.5rem; box-shadow: 0 6px 24px rgb(0 0 0 / .18); }
+.book-cover { text-align: center; padding: 5rem 2rem; min-height: 28rem; display: flex; flex-direction: column; justify-content: center; gap: .6rem; }
+.book-kicker { font-family: ui-sans-serif, system-ui, sans-serif; letter-spacing: .3em; text-transform: uppercase; font-size: .75rem; color: #8a7a5c; }
+.book-title { font-size: 2.6rem; line-height: 1.1; font-weight: 700; margin: .5rem 0; color: #3b2a14; }
+.book-by { font-size: 1.2rem; font-style: italic; color: #57493a; }
+.book-period { margin-top: 1rem; font-size: 1.1rem; letter-spacing: .15em; color: #8a7a5c; }
+.book-facts { display: flex; justify-content: center; gap: 2.5rem; margin: 2rem 0 1rem; }
+.book-facts dd { font-size: 2rem; font-weight: 700; color: #3b2a14; }
+.book-facts dt { font-family: ui-sans-serif, system-ui, sans-serif; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: #8a7a5c; order: 2; }
+.book-facts > div { display: flex; flex-direction: column; align-items: center; }
+.book-gen { margin-top: 2rem; font-family: ui-sans-serif, system-ui, sans-serif; font-size: .75rem; color: #a39478; }
+.book-h2 { font-size: 1.6rem; font-weight: 700; color: #3b2a14; margin-bottom: 1.2rem; }
+.book-toc { list-style: none; padding: 0; margin: 0; }
+.book-toc li { display: flex; align-items: baseline; gap: .5rem; padding: .3rem 0; font-size: 1.05rem; }
+.book-toc-year { font-weight: 700; }
+.book-toc-dots { flex: 1; border-bottom: 1px dotted #b9ab8f; transform: translateY(-.25rem); }
+.book-year { font-size: 3.2rem; font-weight: 700; color: #3b2a14; line-height: 1; }
+.book-sub { font-family: ui-sans-serif, system-ui, sans-serif; font-size: .85rem; color: #8a7a5c; margin: .4rem 0 1.5rem; padding-bottom: .8rem; border-bottom: 2px solid #3b2a14; }
+.book-entry { display: flex; gap: 1.1rem; padding: .9rem 0; border-bottom: 1px solid #ece4d3; break-inside: avoid; }
+.book-entry:last-child { border-bottom: 0; }
+.book-cover-img { width: 3.6rem; flex: none; aspect-ratio: 16 / 25; background: #e9e1cf; border-radius: 2px; overflow: hidden; display: grid; place-items: center; color: #8a7a5c; font-weight: 700; box-shadow: 0 1px 3px rgb(0 0 0 / .3); }
+.book-cover-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.book-entry-body { min-width: 0; flex: 1; }
+.book-entry h3 { font-size: 1.15rem; font-weight: 700; color: #1c1917; }
+.book-meta { font-family: ui-sans-serif, system-ui, sans-serif; font-size: .78rem; color: #6b5d48; margin-top: .15rem; }
+.book-mem { list-style: none; padding: 0; margin: .5rem 0 0; font-size: .92rem; color: #44382a; }
+.book-mem li::before { content: '✦ '; color: #b08a3c; }
+.book-notes { margin-top: .6rem; padding-left: .9rem; border-left: 3px solid #d8c9a6; font-size: .92rem; font-style: italic; color: #3a3025; }
+.book-notes p { margin: .3rem 0; white-space: pre-line; }
+.book-note-date { font-family: ui-sans-serif, system-ui, sans-serif; font-style: normal; font-size: .7rem; font-weight: 700; letter-spacing: .06em; color: #8a7a5c; margin-right: .4rem; }
+
+@media print {
+    @page { size: A4; margin: 14mm; }
+    html, body { background: #fff !important; }
+    .theme-bg, .theme-fx, .no-print { display: none !important; }
+    main { padding: 0 !important; max-width: none !important; }
+    .book { margin-top: 0 !important; }
+    .book-page { box-shadow: none; border: 0; border-radius: 0; margin: 0; padding: 0; background: #fff; }
+    .book-cover { min-height: 240mm; break-after: page; }
+    .book-chapter, .book-page + .book-page { break-before: page; }
+    .book-entry { break-inside: avoid; }
+    .book-year, .book-sub { break-after: avoid; }
+}
+
+/* ===================== Dashboard: blocos de história ===================== */
+
+/* Estante dos últimos zerados */
+.dshelf { display: flex; gap: 0; overflow-x: auto; padding: .25rem .25rem .5rem; perspective: 1200px; scrollbar-width: thin; }
+.dshelf-item { flex: none; width: 7.9rem; }
+.dshelf .shelf-stage { padding: 1rem .25rem 0; }
+.dshelf .shelf-box { width: 6.3rem; }
+.dshelf .shelf-info { margin-top: 1.15rem; }
+.dshelf .shelf-sub { font-size: .7rem; }
+
+/* "Em cima da mesa": até 4 jogos rolando ao mesmo tempo, lado a lado */
+.dtable-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: .75rem; list-style: none; padding: 0; }
+@media (min-width: 640px) { .dtable-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .dtable-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.dtable-tile { display: flex; align-items: center; gap: .9rem; border-radius: .75rem; padding: .6rem .75rem; min-width: 0; height: 100%; background: rgb(var(--s-950) / .35); border: 1px solid rgb(var(--s-50) / .06); transition: border-color .2s ease; }
+a.dtable-tile:hover { border-color: rgb(var(--brand-400) / .6); }
+.dtable-text { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
+.dtable-tile .dtable-title { font-size: .85rem; font-weight: 700; line-height: 1.2; color: rgb(var(--s-50)); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.dtable-tile .dtable-sub { font-size: .72rem; color: rgb(var(--s-400)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dtable-tile .dtable-days { margin-top: .15rem; font-size: .72rem; font-weight: 600; color: rgb(var(--ok)); }
+.dtable-cover { display: block; flex: none; overflow: hidden; border-radius: 3px 5px 5px 3px; background: rgb(var(--s-900)); box-shadow: 0 0 0 1px rgb(0 0 0 / .5), 0 .6rem 1rem rgb(0 0 0 / .4); transform: rotate(-3deg); transition: transform .25s ease; }
+.dtable-cover.is-tile { width: 4rem; aspect-ratio: 16 / 25; }
+li:nth-child(even) > .dtable-tile .dtable-cover.is-tile { transform: rotate(2.5deg); }
+.dtable a:hover .dtable-cover.is-tile { transform: rotate(0deg) translateY(-2px); }
+.dtable-free { border-style: dashed; background: transparent; }
+.dtable-free .dtable-title { color: rgb(var(--s-300)); font-weight: 600; }
+.dtable-cover.is-empty { display: grid; place-items: center; background: transparent; border: 2px dashed rgb(var(--s-50) / .2); box-shadow: none; transform: none !important; color: rgb(var(--s-400)); }
+a.dtable-free:hover .dtable-cover.is-empty { border-color: rgb(var(--brand-400)); color: rgb(var(--brand-400)); }
+@media (prefers-reduced-motion: reduce) { .dtable-cover { transition: none; } }
+
+/* Carta de jogador */
+.pcard { position: relative; max-width: 22rem; padding: 2px; border-radius: 1.25rem; background: linear-gradient(135deg, rgb(var(--brand-500)), rgb(var(--accent)), rgb(var(--c3)), rgb(var(--brand-500))); background-size: 220% 220%; animation: pcardflow 9s ease-in-out infinite alternate; box-shadow: 0 1rem 2rem rgb(0 0 0 / .35); }
+.pcard-inner { position: relative; overflow: hidden; border-radius: calc(1.25rem - 2px); background: linear-gradient(160deg, rgb(var(--s-900)), rgb(var(--s-950))); padding: 1.4rem 1.4rem 1.2rem; }
+.pcard-inner::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, transparent 35%, rgb(255 255 255 / .09) 48%, transparent 62%); background-size: 250% 100%; animation: pcardshine 6s ease-in-out infinite; }
+.pcard-covers { display: flex; justify-content: center; padding: .4rem 0 .2rem; }
+.pcard-cover { width: 5.4rem; aspect-ratio: 16 / 25; margin: 0 -.6rem; overflow: hidden; border-radius: 3px; background: rgb(var(--s-900)); box-shadow: 0 0 0 1px rgb(0 0 0 / .55), 0 .5rem .9rem rgb(0 0 0 / .45); transform: rotate(calc((var(--i) - 1) * 7deg)) translateY(calc(var(--i) * -1px)); z-index: calc(3 - var(--i) * (var(--i) - 1)); }
+.pcard-cover:nth-child(2) { z-index: 3; transform: translateY(-.4rem); }
+.pcard-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@keyframes pcardflow { to { background-position: 100% 100%; } }
+@keyframes pcardshine { 0%, 55% { background-position: 160% 0; } 100% { background-position: -60% 0; } }
+@media (prefers-reduced-motion: reduce) { .pcard, .pcard-inner::after { animation: none; } }
+
+/* Bolhas de pessoas */
+.pbubble { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: var(--s); height: var(--s); min-width: 3.4rem; min-height: 3.4rem; border-radius: 9999px; padding: .25rem; text-align: center; line-height: 1.1; color: rgb(var(--on-brand)); background: linear-gradient(135deg, rgb(var(--brand-600)), rgb(var(--accent))); box-shadow: 0 .35rem .8rem rgb(0 0 0 / .3); transition: transform .15s ease; }
+.pbubble:hover, .pbubble.is-open { transform: scale(1.08); }
+.pbubble-name { font-size: .72rem; font-weight: 800; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 .3rem; }
+.pbubble-n { font-size: .65rem; opacity: .85; }
+.pbubble-n::after { content: ' jogos'; }
+@media (prefers-reduced-motion: reduce) { .pbubble { transition: none; } }
+
+/* Livro: screenshots do jogo (até 4) */
+.book-shots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; margin-top: .7rem; }
+.book-shots figure { margin: 0; break-inside: avoid; }
+.book-shots img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 2px; box-shadow: 0 1px 3px rgb(0 0 0 / .3); display: block; }
+.book-shots figcaption { font-size: .68rem; color: #6b5d48; margin-top: .15rem; font-style: italic; }

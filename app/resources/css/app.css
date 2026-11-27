@@ -1,0 +1,82 @@
+/* Entrada do Tailwind. Compile com: bin\build_css.bat (gera public/assets/css/app.css). */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Componentes reutilizados pelas telas (formulários, cartões, botões) */
+@layer components {
+    .field { @apply w-full rounded-lg border border-slate-50/10 bg-slate-950/60 px-3 py-2.5 text-slate-50 placeholder-slate-500 outline-none transition focus:ring-2 focus:ring-brand-500; }
+    .lbl { @apply mb-1 block text-sm font-medium text-slate-300; }
+    .err { @apply mt-1 text-xs text-danger; }
+    .ok { @apply mt-2 text-sm text-ok; }
+    .card { @apply panel p-5 sm:p-6; }
+    .card-sm { @apply panel p-4 sm:p-5; }
+    /* ===== Botões: 4 estilos x 3 tamanhos (sm, padrão, lg) ===== */
+    .btn, .btn-ghost, .btn-light, .btn-danger { @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 disabled:cursor-not-allowed disabled:opacity-60; }
+    .btn { @apply bg-brand-600 text-on-brand hover:bg-brand-500; }
+    .btn-ghost { @apply border border-slate-50/15 px-4 text-slate-200 hover:bg-slate-50/10; }
+    .btn-light { @apply bg-white font-black text-black hover:bg-white/85 focus-visible:ring-white; }
+    .btn-danger { @apply bg-danger-solid text-white hover:opacity-90 focus-visible:ring-danger; }
+    .btn-sm { @apply px-3 py-1.5 text-sm; }
+    .btn-lg { @apply px-6 py-3 text-base; }
+
+    /* ===== Controle segmentado (abas e modos de exibição) ===== */
+    .seg { @apply inline-flex rounded-lg bg-slate-50/5 p-1 text-sm font-medium; }
+    .seg-btn { @apply rounded-md px-3 py-1.5 transition; }
+
+    /* ===== Página: esqueleto e larguras (estreita para formulários, normal, larga para listas) ===== */
+    .page { @apply mx-auto px-4 pb-28 pt-8 sm:px-6 sm:pt-12; }
+    .page-narrow { @apply max-w-5xl; }
+    .page-normal { @apply max-w-6xl; }
+    .page-wide { @apply max-w-7xl; }
+
+    /* ===== Tipografia: uma receita por função ===== */
+    .t-page { @apply text-2xl font-bold tracking-tight text-slate-50 sm:text-3xl; }
+    .t-hero { @apply text-3xl font-black tracking-tight text-white sm:text-4xl; }
+    .t-section { @apply text-lg font-bold text-slate-50; }
+    .t-hero-xl { @apply text-4xl font-black tracking-tight text-white sm:text-5xl; }
+    .page-sub { @apply mt-1 text-sm text-slate-400; }
+    .back-link { @apply inline-flex items-center gap-1 rounded text-sm text-slate-400 transition hover:text-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400; }
+    .t-card { @apply text-base font-bold text-slate-50; }
+    .kicker { @apply text-xs font-semibold uppercase tracking-wider text-slate-500; }
+    .kicker-hero { @apply text-xs font-semibold uppercase tracking-[.2em] text-white/60; }
+    .caption { @apply text-xs text-slate-500; }
+
+    /* ===== Superfícies ===== */
+    .panel { @apply rounded-2xl border border-slate-50/10 bg-slate-900/70; }
+    .hero-box { @apply relative isolate overflow-hidden rounded-3xl border border-slate-50/10 bg-hero text-white; }
+    .hero-box-gold { @apply border-gold-400/35; }
+
+    /* ===== Estados ===== */
+    .empty { @apply rounded-2xl border border-dashed border-slate-50/15 p-8 text-center text-sm text-slate-400 sm:p-10; }
+    .empty-title { @apply text-lg font-semibold text-slate-50; }
+    .skeleton { @apply animate-pulse rounded-2xl bg-slate-50/5; }
+    .alert-error { @apply rounded-lg border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger; }
+    .demo-note { @apply mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gold-400/40 bg-gold-400/10 px-4 py-3 text-sm text-slate-200; }
+
+    /* ===== Janelas (modais) ===== */
+    .modal-back { @apply fixed inset-0 z-modal grid place-items-center bg-black/70 p-4 backdrop-blur-sm; }
+    .modal-box { @apply w-full max-w-md rounded-2xl border border-slate-50/10 bg-slate-900 p-6 shadow-2xl; }
+    .icon-btn { @apply grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-50/10 hover:text-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 disabled:opacity-30 disabled:hover:bg-transparent; }
+    /* ===== Faixa "onde você está" (partials/crumb.php) ===== */
+    .crumb { @apply mb-4 flex items-center gap-3; }
+    .crumb-title { @apply hidden shrink-0 text-xs font-semibold uppercase tracking-wider text-slate-500 sm:inline; }
+    .crumb-list { @apply flex min-w-0 gap-1.5 overflow-x-auto pb-1; scrollbar-width: none; }
+    .crumb-list::-webkit-scrollbar { display: none; }
+    .crumb-link { @apply block whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold text-slate-400 transition hover:bg-slate-50/10 hover:text-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400; }
+    .crumb-link.is-on { @apply bg-brand-500/20 text-brand-400; }
+    /* ===== Menu em tela cheia: grade compacta de ícones ===== */
+    .menu-h { @apply text-xs font-bold uppercase tracking-[.2em] text-slate-400; }
+    .menu-grid { @apply grid gap-1.5; grid-template-columns: repeat(auto-fill, minmax(4.75rem, 1fr)); }
+    @media (min-width: 1280px) { .menu-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .menu-ico { width: clamp(2.75rem, min(9.5vh, 15vw), 6.5rem) !important; } }
+    .menu-cell { @apply min-w-0; }
+    .menu-tile { @apply flex w-full flex-col items-center gap-1 rounded-xl p-1.5 text-center transition focus:outline-none; }
+    .menu-tile:hover { @apply bg-slate-50/5; }
+    .menu-tile.is-sel { @apply bg-brand-500/20 ring-2 ring-brand-400; }
+    .menu-ico { @apply grid place-items-center rounded-2xl bg-slate-50/10 text-slate-100 transition; width: clamp(2.75rem, min(7vh, 15vw), 6.5rem); aspect-ratio: 1; }
+    .menu-ico > svg { width: 52%; height: 52%; }
+    .menu-tile.is-here .menu-ico { @apply bg-brand-600 text-on-brand; }
+    .menu-tile.is-sel .menu-ico { @apply scale-105 bg-gradient-to-br from-brand-600 to-accent text-on-tile; }
+    .menu-lbl { @apply line-clamp-3 font-semibold leading-tight text-slate-200; font-size: clamp(.6875rem, 1.5vh, 1rem); min-height: 2.5em; hyphens: auto; overflow-wrap: anywhere; }
+    .menu-hintbar { @apply mt-3 rounded-xl border border-slate-50/10 bg-slate-900/60 px-4 py-2.5 text-sm text-slate-400; }
+}

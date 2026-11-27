@@ -1,0 +1,18 @@
+# PHP portátil: programa de terceiros, preparado com preparar-php.bat
+php/
+
+# gerados pela compilação (o programa pronto vai em "Releases")
+*.exe
+lancador/icone.ico
+*.zip
+
+# dados pessoais e registros: nunca vão para o repositório
+*.db
+*.db-*
+*.log
+.env
+uploads/
+dados/
+
+# ferramentas baixadas à parte
+app/tools/

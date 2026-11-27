@@ -1,0 +1,473 @@
+/* Estrutura base + efeitos por tema. As CORES vêm de variáveis definidas em theme.js. */
+
+html {
+    font-size: var(--fs, 100%);
+    --r-md: .375rem; --r-lg: .5rem; --r-xl: .75rem; --r-2xl: 1rem;
+}
+h1, h2, h3 { font-family: var(--font-head, var(--font-sans, inherit)); }
+
+/* camadas de fundo e de efeitos (presentes em todas as páginas) */
+.theme-bg, .theme-fx { position: fixed; inset: 0; pointer-events: none; }
+.theme-bg { z-index: -10; background: radial-gradient(60rem 40rem at 50% -10%, rgb(var(--brand-600) / .25), transparent); }
+.theme-fx { z-index: 60; }
+html[data-fx="off"] .theme-fx,
+html[data-fx="off"] .theme-bg::before,
+html[data-fx="off"] .theme-bg::after { display: none; }
+.theme-bg::before, .theme-bg::after { content: ""; position: absolute; inset: 0; }
+
+.menu-bg {
+    background:
+        radial-gradient(50rem 30rem at 80% 0%, rgb(var(--accent) / .22), transparent),
+        radial-gradient(50rem 30rem at 10% 100%, rgb(var(--brand-600) / .28), transparent);
+}
+
+/* ---------- Arcade Neon: estrelas piscando ---------- */
+html[data-theme="arcade"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(1.5px 1.5px at 20px 30px, rgb(var(--s-50) / .5), transparent),
+        radial-gradient(1px 1px at 90px 120px, rgb(var(--brand-400) / .7), transparent),
+        radial-gradient(1.5px 1.5px at 160px 60px, rgb(var(--s-50) / .35), transparent),
+        radial-gradient(1px 1px at 230px 170px, rgb(var(--accent) / .7), transparent);
+    background-size: 280px 200px;
+    opacity: .5;
+    animation: twinkle 5s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from { opacity: .25; } to { opacity: .65; } }
+
+/* ---------- Game Boy: grade de pixels do LCD ---------- */
+html[data-theme="gameboy"] .theme-bg { background: rgb(var(--s-950)); }
+html[data-theme="gameboy"][data-fx="on"] .theme-fx {
+    background-image:
+        linear-gradient(rgb(0 0 0 / .18) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(0 0 0 / .18) 1px, transparent 1px);
+    background-size: 3px 3px;
+}
+html[data-theme="gameboy"] .bg-gradient-to-br,
+html[data-theme="gameboy"] .bg-gradient-to-r { background-image: none; background-color: rgb(var(--brand-600)); }
+html[data-theme="gameboy"] * { text-shadow: none; }
+
+/* ---------- Cyberpunk: scanlines, brilho neon e cantos cortados ---------- */
+html[data-theme="cyberpunk"] .theme-bg {
+    background:
+        radial-gradient(45rem 30rem at 0% 0%, rgb(var(--brand-500) / .14), transparent),
+        radial-gradient(45rem 30rem at 100% 100%, rgb(var(--c3) / .22), transparent);
+}
+html[data-theme="cyberpunk"][data-fx="on"] .theme-fx {
+    background: repeating-linear-gradient(0deg, rgb(0 240 255 / .06) 0 1px, transparent 1px 3px);
+    animation: flicker 6s steps(1) infinite;
+}
+html[data-theme="cyberpunk"][data-fx="on"] .rounded-2xl {
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+html[data-theme="cyberpunk"][data-fx="on"] h1,
+html[data-theme="cyberpunk"][data-fx="on"] h2 { text-transform: uppercase; letter-spacing: .06em; text-shadow: 0 0 12px rgb(var(--brand-500) / .55); }
+@keyframes flicker { 0%, 94%, 100% { opacity: 1; } 95% { opacity: .55; } 97% { opacity: .9; } }
+
+/* ---------- Synthwave: sol e grade em perspectiva ---------- */
+html[data-theme="synthwave"] .theme-bg {
+    background:
+        radial-gradient(22rem 22rem at 50% 62%, rgb(var(--brand-500) / .55), rgb(var(--accent) / .25) 55%, transparent 72%),
+        linear-gradient(180deg, rgb(var(--s-950)) 0%, rgb(var(--neutral)) 70%, rgb(var(--s-950)) 100%);
+}
+html[data-theme="synthwave"][data-fx="on"] .theme-bg::after {
+    inset: auto 0 0 0; height: 42%;
+    background-image:
+        linear-gradient(rgb(var(--c3) / .55) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(var(--c3) / .55) 1px, transparent 1px);
+    background-size: 56px 56px;
+    transform: perspective(380px) rotateX(62deg); transform-origin: 50% 100%;
+    -webkit-mask-image: linear-gradient(transparent, #000 70%); mask-image: linear-gradient(transparent, #000 70%);
+    animation: gridmove 2.4s linear infinite;
+}
+html[data-theme="synthwave"][data-fx="on"] h1,
+html[data-theme="synthwave"][data-fx="on"] h2 { text-shadow: 0 0 14px rgb(var(--brand-500) / .6); letter-spacing: .03em; }
+@keyframes gridmove { to { background-position: 0 56px; } }
+
+/* ---------- Survival Horror: grão de filme e vinheta ---------- */
+html[data-theme="horror"] .theme-bg {
+    background: radial-gradient(70rem 45rem at 50% 30%, rgb(var(--brand-600) / .10), transparent 60%);
+}
+html[data-theme="horror"][data-fx="on"] .theme-bg::after {
+    background: radial-gradient(ellipse at center, transparent 45%, rgb(0 0 0 / .75) 100%);
+}
+html[data-theme="horror"][data-fx="on"] .theme-fx {
+    opacity: .12;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    animation: grain .8s steps(4) infinite;
+}
+html[data-theme="horror"][data-fx="on"] h1 { text-shadow: 2px 2px 0 rgb(var(--accent)); }
+@keyframes grain { 0% { background-position: 0 0; } 25% { background-position: -40px 20px; } 50% { background-position: 30px -30px; } 75% { background-position: -20px -40px; } 100% { background-position: 0 0; } }
+
+/* ---------- Taverna RPG: moldura dourada ---------- */
+html[data-theme="rpg"] .theme-bg {
+    background:
+        radial-gradient(50rem 30rem at 50% -5%, rgb(var(--brand-500) / .16), transparent),
+        radial-gradient(40rem 30rem at 100% 100%, rgb(var(--accent) / .18), transparent);
+}
+html[data-theme="rpg"][data-fx="on"] .rounded-2xl { outline: 1px solid rgb(var(--brand-500) / .35); outline-offset: -6px; }
+html[data-theme="rpg"][data-fx="on"] h1,
+html[data-theme="rpg"][data-fx="on"] h2 { letter-spacing: .04em; text-shadow: 0 1px 0 rgb(0 0 0 / .6); }
+
+/* ---------- Abismo: caustics e bolhas subindo ---------- */
+html[data-theme="abyss"] .theme-bg {
+    background: linear-gradient(180deg, rgb(var(--brand-600) / .16), transparent 55%), radial-gradient(60rem 40rem at 50% 110%, rgb(var(--accent) / .25), transparent);
+}
+html[data-theme="abyss"][data-fx="on"] .theme-bg::after {
+    background:
+        radial-gradient(30rem 20rem at 30% 20%, rgb(var(--brand-500) / .10), transparent),
+        radial-gradient(26rem 18rem at 75% 40%, rgb(var(--accent) / .12), transparent);
+    animation: drift 18s ease-in-out infinite alternate;
+}
+html[data-theme="abyss"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(circle at 20px 20px, rgb(var(--s-50) / .22) 0 3px, transparent 4px),
+        radial-gradient(circle at 120px 90px, rgb(var(--s-50) / .16) 0 2px, transparent 3px),
+        radial-gradient(circle at 210px 40px, rgb(var(--s-50) / .2) 0 4px, transparent 5px),
+        radial-gradient(circle at 60px 150px, rgb(var(--s-50) / .14) 0 2px, transparent 3px);
+    background-size: 260px 220px, 310px 260px, 370px 300px, 230px 280px;
+    animation: bubbles 40s linear infinite;
+}
+@keyframes drift { from { transform: translate3d(-3%, -2%, 0); } to { transform: translate3d(3%, 3%, 0); } }
+@keyframes bubbles { to { background-position: 40px -880px, -30px -780px, 60px -900px, -20px -840px; } }
+
+/* ---------- Vale Cozy: papel pontilhado e cantos macios ---------- */
+html[data-theme="cozy"] .theme-bg {
+    background:
+        radial-gradient(rgb(var(--brand-500) / .14) 1.2px, transparent 1.6px) 0 0 / 24px 24px,
+        radial-gradient(50rem 30rem at 50% -10%, rgb(var(--accent) / .12), transparent);
+}
+html[data-theme="cozy"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(3px 3px at 15% 20%, rgb(255 214 102 / .9), transparent),
+        radial-gradient(2px 2px at 70% 35%, rgb(255 214 102 / .8), transparent),
+        radial-gradient(3px 3px at 40% 75%, rgb(255 214 102 / .85), transparent),
+        radial-gradient(2px 2px at 88% 80%, rgb(255 214 102 / .8), transparent);
+    animation: fireflies 7s ease-in-out infinite alternate;
+}
+@keyframes fireflies { from { opacity: .15; transform: translateY(0); } to { opacity: .7; transform: translateY(-14px); } }
+
+/* ---------- Terminal: CRT, brilho e cursor ---------- */
+html[data-theme="terminal"] .theme-bg { background: rgb(var(--s-950)); }
+html[data-theme="terminal"][data-fx="on"] .theme-bg::after {
+    background: radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / .65) 100%);
+}
+html[data-theme="terminal"][data-fx="on"] .theme-fx {
+    background: repeating-linear-gradient(0deg, rgb(0 255 65 / .05) 0 1px, transparent 1px 3px);
+    animation: flicker 5s steps(1) infinite;
+}
+html[data-theme="terminal"][data-fx="on"] h1,
+html[data-theme="terminal"][data-fx="on"] h2 { text-shadow: 0 0 10px rgb(var(--brand-500) / .7); }
+html[data-theme="terminal"][data-fx="on"] h1::after {
+    content: "\2588"; margin-left: .25em; animation: blink 1s steps(1) infinite;
+}
+html[data-theme="terminal"] .bg-gradient-to-br,
+html[data-theme="terminal"] .bg-gradient-to-r { background-image: none; background-color: rgb(var(--brand-600)); }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Papel: sem efeitos (máxima legibilidade) */
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-fx, .theme-fx::after, .theme-bg::before, .theme-bg::after, h1::after { animation: none !important; }
+}
+
+/* ---------- Caixa de jogo (estilo estojo de DVD do PS2) ---------- */
+.case {
+    position: relative; display: flex; flex-direction: column; aspect-ratio: 16 / 25; overflow: hidden;
+    border-radius: 5px 5px 3px 3px; background: #0a0a0d;
+    box-shadow: 0 10px 20px rgb(0 0 0 / .5), inset 0 1px 0 rgb(255 255 255 / .08);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+/* variante mais alta (jogos dentro das franquias): ~8% mais alta que o estojo padrão */
+.case.case-tall { aspect-ratio: 16 / 27; }
+/* faixa preta do topo com o nome do sistema e um LED na cor do tema */
+.case-band {
+    flex: none; display: flex; align-items: center; gap: .45rem; height: 1.5rem; padding: 0 .55rem 0 .75rem;
+    background: var(--band-bg, linear-gradient(#24242d, #09090c)); border-bottom: 1px solid rgb(0 0 0 / .35);
+    color: var(--band-fg, #e9e9f2); font: 700 .62rem/1 var(--font-sans, sans-serif); letter-spacing: .16em; text-transform: uppercase;
+}
+/* pontinho: na cor do sistema (ou do tema, quando a faixa não tem sistema) */
+.case-band::before {
+    content: ""; flex: none; width: .5rem; height: .5rem; border-radius: 50%;
+    background: var(--band-led, rgb(var(--brand-500))); box-shadow: 0 0 6px var(--band-led, rgb(var(--brand-500) / .9));
+}
+.case-band span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.case-art { position: relative; flex: 1; min-height: 0; overflow: hidden; background: #111; }
+/* dobradiça (lombada) à esquerda */
+.case::before {
+    content: ""; position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; width: 7px; pointer-events: none;
+    background: linear-gradient(90deg, rgb(0 0 0 / .65), rgb(255 255 255 / .1) 55%, transparent);
+}
+/* reflexo do plástico */
+.case::after {
+    content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background: linear-gradient(115deg, rgb(255 255 255 / .2) 0%, rgb(255 255 255 / 0) 30%, rgb(255 255 255 / 0) 70%, rgb(255 255 255 / .07) 100%);
+}
+.group:hover .case, .group:focus-visible .case {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 0 0 2px rgb(var(--brand-400)), 0 18px 30px rgb(var(--brand-600) / .5);
+}
+@media (prefers-reduced-motion: reduce) {
+    .case { transition: none; }
+    .group:hover .case, .group:focus-visible .case { transform: none; }
+}
+
+/* ---------- Nota 11: dourado com brilho passando ---------- */
+.rating-gold {
+    background: linear-gradient(110deg, #f59e0b 0%, #fde047 35%, #fff3b0 50%, #fde047 65%, #f59e0b 100%);
+    background-size: 220% 100%;
+    box-shadow: 0 0 10px rgb(251 191 36 / .65);
+    animation: gold-shine 3.2s linear infinite;
+}
+@keyframes gold-shine { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) { .rating-gold { animation: none; } }
+
+/* ---------- Faixa da caixa: sistema à esquerda, data à direita ---------- */
+.case-band { height: 1.85rem; font-size: .68rem; }
+.case-band .case-date { flex: none; margin-left: auto; letter-spacing: .06em; font-variant-numeric: tabular-nums; color: inherit; opacity: .85; }
+
+
+/* =====================================================================
+   Segundo pacote de temas
+   ===================================================================== */
+
+/* ---------- Sakura: pétalas caindo na diagonal ---------- */
+html[data-theme="sakura"] .theme-bg {
+    background:
+        radial-gradient(55rem 35rem at 85% -10%, rgb(var(--brand-500) / .16), transparent),
+        radial-gradient(45rem 30rem at 0% 100%, rgb(var(--accent) / .12), transparent);
+}
+html[data-theme="sakura"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(ellipse 6px 4px at 30px 40px, rgb(236 72 153 / .8), transparent 72%),
+        radial-gradient(ellipse 5px 3px at 140px 110px, rgb(249 168 212 / .95), transparent 72%),
+        radial-gradient(ellipse 7px 4px at 220px 20px, rgb(236 72 153 / .65), transparent 72%),
+        radial-gradient(ellipse 5px 3px at 80px 190px, rgb(249 168 212 / .85), transparent 72%);
+    background-size: 260px 240px, 340px 300px, 420px 360px, 300px 280px;
+    animation: petals 24s linear infinite;
+}
+@keyframes petals { to { background-position: -260px 240px, -340px 300px, -420px 360px, -300px 280px; } }
+
+/* ---------- Masmorra: blocos de pedra, tochas tremeluzindo ---------- */
+html[data-theme="dungeon"] .theme-bg {
+    background:
+        radial-gradient(30rem 24rem at 0% 55%, rgb(var(--brand-500) / .18), transparent),
+        radial-gradient(30rem 24rem at 100% 55%, rgb(var(--brand-500) / .18), transparent),
+        repeating-linear-gradient(0deg, transparent 0 46px, rgb(var(--s-50) / .035) 46px 48px),
+        repeating-linear-gradient(90deg, transparent 0 94px, rgb(var(--s-50) / .03) 94px 96px);
+}
+html[data-theme="dungeon"][data-fx="on"] .theme-fx {
+    background:
+        radial-gradient(28rem 22rem at 0% 55%, rgb(251 146 60 / .15), transparent 70%),
+        radial-gradient(28rem 22rem at 100% 55%, rgb(251 146 60 / .15), transparent 70%),
+        radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / .5) 100%);
+    animation: torch 3.6s steps(1) infinite;
+}
+html[data-theme="dungeon"][data-fx="on"] h1,
+html[data-theme="dungeon"][data-fx="on"] h2 { letter-spacing: .03em; text-shadow: 0 0 14px rgb(var(--brand-500) / .35); }
+@keyframes torch { 0% { opacity: 1; } 12% { opacity: .82; } 24% { opacity: .96; } 40% { opacity: .78; } 55% { opacity: 1; } 70% { opacity: .88; } 86% { opacity: .97; } }
+
+/* ---------- Galáxia: nebulosas, estrelas deslizando e estrela cadente ---------- */
+html[data-theme="galaxy"] .theme-bg {
+    background:
+        radial-gradient(50rem 35rem at 20% 10%, rgb(var(--accent) / .28), transparent),
+        radial-gradient(45rem 30rem at 85% 70%, rgb(var(--brand-600) / .3), transparent),
+        radial-gradient(35rem 25rem at 50% 100%, rgb(var(--c3) / .25), transparent);
+}
+html[data-theme="galaxy"][data-fx="on"] .theme-bg::after {
+    background-image:
+        radial-gradient(1.2px 1.2px at 30px 50px, rgb(255 255 255 / .75), transparent),
+        radial-gradient(1px 1px at 120px 220px, rgb(199 210 254 / .8), transparent),
+        radial-gradient(1.6px 1.6px at 250px 120px, rgb(255 255 255 / .6), transparent),
+        radial-gradient(1px 1px at 340px 300px, rgb(244 114 182 / .7), transparent),
+        radial-gradient(1.2px 1.2px at 60px 330px, rgb(255 255 255 / .55), transparent);
+    background-size: 400px 400px;
+    animation: starfield 160s linear infinite;
+}
+html[data-theme="galaxy"][data-fx="on"] .theme-fx::after {
+    content: ""; position: absolute; top: 12%; left: -10%; width: 150px; height: 2px;
+    background: linear-gradient(90deg, transparent, #fff); border-radius: 2px;
+    opacity: 0; transform: rotate(18deg); animation: shoot 11s ease-in infinite;
+}
+@keyframes starfield { to { background-position: -400px 400px; } }
+@keyframes shoot {
+    0%, 90% { opacity: 0; transform: translate(0, 0) rotate(18deg); }
+    92% { opacity: 1; }
+    100% { opacity: 0; transform: translate(115vw, 38vh) rotate(18deg); }
+}
+
+/* ---------- Terra Devastada: poeira ao vento e céu cor de ferrugem ---------- */
+html[data-theme="wasteland"] .theme-bg {
+    background:
+        linear-gradient(180deg, rgb(var(--brand-600) / .14), transparent 45%),
+        radial-gradient(60rem 30rem at 50% 115%, rgb(var(--accent) / .38), transparent);
+}
+html[data-theme="wasteland"][data-fx="on"] .theme-bg::after {
+    background: radial-gradient(ellipse at center, transparent 50%, rgb(20 10 0 / .6) 100%);
+}
+html[data-theme="wasteland"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(1.6px 1.6px at 20px 30px, rgb(var(--s-50) / .55), transparent),
+        radial-gradient(1.2px 1.2px at 150px 120px, rgb(var(--s-50) / .45), transparent),
+        radial-gradient(2px 2px at 90px 170px, rgb(var(--brand-400) / .45), transparent),
+        radial-gradient(1.2px 1.2px at 230px 60px, rgb(var(--s-50) / .4), transparent);
+    background-size: 260px 200px, 340px 260px, 300px 230px, 380px 280px;
+    animation: dust 28s linear infinite;
+}
+@keyframes dust { to { background-position: 520px 0, 680px 0, 600px 0, 760px 0; } }
+
+/* ---------- Nevasca: neve em três camadas ---------- */
+html[data-theme="frost"] .theme-bg {
+    background:
+        linear-gradient(180deg, rgb(var(--brand-600) / .2), transparent 55%),
+        radial-gradient(50rem 30rem at 80% 0%, rgb(var(--brand-400) / .12), transparent);
+}
+html[data-theme="frost"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(3px 3px at 40px 60px, rgb(255 255 255 / .9), transparent),
+        radial-gradient(2px 2px at 210px 170px, rgb(255 255 255 / .8), transparent),
+        radial-gradient(2.5px 2.5px at 120px 250px, rgb(255 255 255 / .85), transparent),
+        radial-gradient(4px 4px at 70px 120px, rgb(255 255 255 / .75), transparent),
+        radial-gradient(2px 2px at 330px 330px, rgb(255 255 255 / .8), transparent),
+        radial-gradient(3px 3px at 260px 40px, rgb(224 242 254 / .9), transparent);
+    background-size: 300px 300px, 300px 300px, 450px 450px, 450px 450px, 600px 600px, 600px 600px;
+    animation: snow 16s linear infinite;
+}
+@keyframes snow { to { background-position: 0 300px, 0 300px, 0 450px, 0 450px, 0 600px, 0 600px; } }
+
+/* ---------- Magma: brilho pulsando e brasas subindo ---------- */
+html[data-theme="magma"] .theme-bg {
+    background:
+        radial-gradient(70rem 26rem at 50% 115%, rgb(var(--brand-500) / .45), rgb(var(--accent) / .25) 40%, transparent 70%),
+        linear-gradient(180deg, rgb(var(--s-950)), rgb(var(--neutral)));
+}
+html[data-theme="magma"][data-fx="on"] .theme-bg::after {
+    background: radial-gradient(50rem 16rem at 50% 108%, rgb(255 140 40 / .4), transparent 70%);
+    animation: lava 4.5s ease-in-out infinite alternate;
+}
+html[data-theme="magma"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(2px 2px at 40px 260px, rgb(255 160 60 / .95), transparent),
+        radial-gradient(1.6px 1.6px at 200px 120px, rgb(255 110 40 / .9), transparent),
+        radial-gradient(2.4px 2.4px at 120px 380px, rgb(255 190 80 / .9), transparent),
+        radial-gradient(1.6px 1.6px at 300px 430px, rgb(255 120 40 / .85), transparent),
+        radial-gradient(2px 2px at 90px 520px, rgb(255 170 70 / .9), transparent);
+    background-size: 300px 300px, 300px 300px, 440px 440px, 440px 440px, 580px 580px;
+    animation: embers 14s linear infinite;
+}
+html[data-theme="magma"][data-fx="on"] h1,
+html[data-theme="magma"][data-fx="on"] h2 { letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 0 14px rgb(var(--brand-500) / .55); }
+@keyframes lava { from { opacity: .55; } to { opacity: 1; } }
+@keyframes embers { to { background-position: 0 -300px, 0 -300px, 0 -440px, 0 -440px, 0 -580px; } }
+
+/* ---------- Sumi-e: papel de arroz, sol vermelho e tinta ---------- */
+html[data-theme="sumi"] .theme-bg {
+    background:
+        radial-gradient(17rem 17rem at 88% 14%, rgb(var(--brand-500) / .15) 0 58%, transparent 59%),
+        radial-gradient(60rem 30rem at 0% 100%, rgb(var(--s-50) / .08), transparent),
+        radial-gradient(40rem 20rem at 70% 105%, rgb(var(--s-50) / .06), transparent);
+}
+html[data-theme="sumi"][data-fx="on"] .theme-fx {
+    opacity: .06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+html[data-theme="sumi"] [class*="border-slate-50/10"] { border-color: rgb(var(--s-50) / .2); }
+
+/* ---------- Doce: bolinhas, confete subindo ---------- */
+html[data-theme="candy"] .theme-bg {
+    background:
+        radial-gradient(rgb(var(--brand-500) / .12) 2px, transparent 2.6px) 0 0 / 28px 28px,
+        radial-gradient(50rem 30rem at 15% 0%, rgb(var(--accent) / .14), transparent),
+        radial-gradient(45rem 30rem at 100% 100%, rgb(var(--c3) / .14), transparent);
+}
+html[data-theme="candy"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(circle at 40px 260px, rgb(236 72 153 / .5) 0 6px, transparent 7px),
+        radial-gradient(circle at 210px 120px, rgb(124 58 237 / .45) 0 5px, transparent 6px),
+        radial-gradient(circle at 120px 380px, rgb(13 148 136 / .5) 0 7px, transparent 8px),
+        radial-gradient(circle at 300px 430px, rgb(245 158 11 / .5) 0 5px, transparent 6px),
+        radial-gradient(circle at 90px 520px, rgb(236 72 153 / .45) 0 6px, transparent 7px);
+    background-size: 320px 320px, 320px 320px, 460px 460px, 460px 460px, 600px 600px;
+    animation: confetti 38s linear infinite;
+}
+@keyframes confetti { to { background-position: 0 -320px, 0 -320px, 0 -460px, 0 -460px, 0 -600px; } }
+
+/* ---------- Alto Contraste: bordas e foco bem marcados (sem efeitos) ---------- */
+html[data-theme="contrast"] [class*="border-slate-50/"] { border-color: rgb(var(--s-50) / .6) !important; }
+html[data-theme="contrast"] :focus-visible { outline: 3px solid rgb(var(--brand-500)); outline-offset: 2px; }
+html[data-theme="contrast"] .theme-bg { background: rgb(var(--s-950)); }
+html[data-theme="contrast"] a { text-decoration-thickness: 2px; }
+
+/* ---------- Floresta: raios de luz entre as árvores e vaga-lumes ---------- */
+html[data-theme="forest"] .theme-bg {
+    background:
+        linear-gradient(180deg, rgb(var(--brand-600) / .16), transparent 55%),
+        radial-gradient(60rem 30rem at 50% 115%, rgb(var(--accent) / .16), transparent);
+}
+html[data-theme="forest"][data-fx="on"] .theme-bg::after {
+    inset: -10% -10% 30% -10%;
+    background: repeating-linear-gradient(105deg, transparent 0 90px, rgb(var(--accent) / .08) 90px 140px, transparent 140px 270px);
+    -webkit-mask-image: linear-gradient(#000, transparent 80%); mask-image: linear-gradient(#000, transparent 80%);
+    animation: beams 14s ease-in-out infinite alternate;
+}
+html[data-theme="forest"][data-fx="on"] .theme-fx {
+    background-image:
+        radial-gradient(3px 3px at 15% 25%, rgb(253 224 71 / .9), transparent),
+        radial-gradient(2px 2px at 68% 38%, rgb(190 242 100 / .85), transparent),
+        radial-gradient(3px 3px at 42% 72%, rgb(253 224 71 / .85), transparent),
+        radial-gradient(2px 2px at 88% 82%, rgb(190 242 100 / .8), transparent);
+    animation: fireflies 7s ease-in-out infinite alternate;
+}
+@keyframes beams { from { transform: translateX(-30px); } to { transform: translateX(40px); } }
+
+/* ---------- Best of (melhor jogo de cada categoria): dourado em qualquer tema ---------- */
+:root { --best-1: #fde68a; --best-2: #f59e0b; --best-3: #b45309; }
+.best-kicker { font-size: .7rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--best-2); }
+/* moldura dourada da capa escolhida */
+.best-frame {
+    position: relative; border-radius: .6rem; padding: 3px;
+    background: linear-gradient(135deg, var(--best-1), var(--best-2) 45%, var(--best-3) 70%, var(--best-1));
+    box-shadow: 0 0 0 1px rgb(0 0 0 / .35), 0 8px 24px -6px rgb(245 158 11 / .55);
+}
+.best-frame > img, .best-frame > .best-frame-inner { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: calc(.6rem - 3px); }
+/* brilho que passa pela moldura de vez em quando */
+.best-shine { position: relative; overflow: hidden; }
+.best-shine::after {
+    content: ""; position: absolute; inset: -40%; pointer-events: none;
+    background: linear-gradient(115deg, transparent 42%, rgb(255 255 255 / .35) 50%, transparent 58%);
+    transform: translateX(-60%); animation: best-shine 5.5s ease-in-out infinite;
+}
+@keyframes best-shine { 0%, 70% { transform: translateX(-60%); } 100% { transform: translateX(60%); } }
+@media (prefers-reduced-motion: reduce) { .best-shine::after { animation: none; display: none; } }
+/* capa selecionada no seletor */
+.best-pick-cover.is-selected { opacity: 1; box-shadow: 0 0 0 3px var(--best-2), 0 0 22px rgb(245 158 11 / .5); transform: translateY(-2px); }
+/* selo de troféu */
+.best-badge {
+    display: inline-flex; align-items: center; gap: .3rem; border-radius: 999px; padding: .2rem .6rem;
+    background: linear-gradient(90deg, var(--best-1), var(--best-2)); color: #1c1203;
+    font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; box-shadow: 0 2px 8px rgb(0 0 0 / .35);
+}
+/* estojo de um jogo do hall da fama (GOTY ou best of): contorno dourado discreto */
+.case.case-honor { box-shadow: 0 0 0 2px var(--best-2), 0 10px 22px -4px rgb(245 158 11 / .45), inset 0 1px 0 rgb(255 255 255 / .08); }
+
+/* ---------- Faixa de XP (topo de todas as telas) ---------- */
+.xp-strip { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 35; background: rgb(var(--s-50) / .08); pointer-events: none; }
+.xp-strip > span { display: block; height: 100%; border-radius: 0 3px 3px 0; background: linear-gradient(90deg, rgb(var(--brand-600)), rgb(var(--accent))); box-shadow: 0 0 8px rgb(var(--brand-400) / .6); transition: width .6s ease; }
+
+/* ---------- Transição suave entre páginas (nativa do navegador; desligada com "reduzir movimento") ---------- */
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .16s; }
+}
+
+/* ---------- Modo apresentar: tira o que não é conteúdo ---------- */
+html[data-present] .crumb,
+html[data-present] .xp-strip,
+html[data-present] button[aria-label="Abrir menu"] { display: none !important; }
+html[data-present] main { padding-top: 1.25rem; }
+
+/* ---------- Menu: os ícones entram em cascata ao abrir ---------- */
+@media (prefers-reduced-motion: no-preference) {
+    .menu-cell { animation: menu-pop .28s ease both; animation-delay: calc(var(--i, 0) * 14ms); }
+}
+@keyframes menu-pop { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+

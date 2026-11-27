@@ -1,0 +1,51 @@
+﻿MyGameList - programa para Windows
+==================================
+
+COMO ABRIR
+  Dê dois cliques em MyGameList.exe. Abre uma janela própria; para sair, feche a janela.
+  Não precisa de XAMPP, Apache, MySQL nem internet.
+  Na primeira vez o Windows pode avisar que o programa é de um autor desconhecido
+  (ele não tem assinatura digital): "Mais informações" > "Executar assim mesmo".
+  Precisa do Windows 10 ou 11 com o Microsoft Edge (já vem no Windows).
+
+USUÁRIOS
+  A tela de entrada ("Quem vai jogar?") mostra um ícone para cada usuário: é só clicar no seu. Não há senha.
+  "Novo usuário" pede o nome e a imagem e oferece um tour opcional de como usar.
+  A imagem pode ser um ícone pronto, uma foto do computador (JPEG, PNG ou WebP, até 8 MB) ou a inicial do nome;
+  troque quando quiser em Minha conta. O tour fica no menu, em "Como usar".
+  Atenção: sem senha, qualquer pessoa com acesso ao computador entra em qualquer usuário.
+  O ranking e os perfis mostram os usuários deste computador.
+
+TRAZER OS DADOS DO SITE ANTIGO (XAMPP)
+  1. Feche o MyGameList.
+  2. Ligue o MySQL no painel do XAMPP.
+  3. Dê dois cliques em ferramentas\importar-meus-dados.bat
+  Copia jogos, notas, franquias, capas e screenshots. Só LÊ o site antigo.
+  Se o programa já tiver contas, nada é alterado. Para substituir tudo (guardando uma
+  cópia do banco atual), abra um Prompt na pasta ferramentas e rode:
+      importar-meus-dados.bat --substituir
+  Depois é só clicar no seu usuário.
+
+ONDE FICAM OS SEUS DADOS
+  Na pasta:  %LOCALAPPDATA%\MyGameList
+  (cole esse endereço na barra do Explorador de Arquivos)
+      mygamelist.db   o banco de dados
+      uploads\        capas, screenshots e fotos dos usuários
+      logs\           registro de erros
+  BACKUP: com o programa fechado, copie essa pasta inteira.
+  Atualizar ou trocar a pasta do programa não mexe nos dados.
+  Para começar do zero: apague essa pasta.
+
+LEVAR PARA OUTRO COMPUTADOR
+  Copie a pasta MyGameList inteira (esta aqui). Para levar os dados junto, copie
+  também a pasta de dados para o mesmo lugar no outro computador.
+
+ATALHO
+  ferramentas\criar-atalho.bat cria um atalho na área de trabalho.
+
+O QUE HÁ NESTA PASTA
+  MyGameList.exe   o programa
+  app\             as telas e as regras (PHP)
+  php\             PHP portátil usado por trás (licença em php\license.txt)
+  ferramentas\     importar dados, criar atalho
+  lancador\        código do MyGameList.exe (compilar.bat recria o .exe)
